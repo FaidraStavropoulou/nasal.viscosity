@@ -128,11 +128,18 @@ qpois.model.viscosity.interact <- glm(nosebleeds ~ 1 + previous.year + mucus.vis
                                  family = quasipoisson(link=log))
 summary(qpois.model.viscosity.interact)
 
+anova(qpois.model.viscosity.arm, qpois.model.viscosity.interact, test ="Chisq")
 qplot(x = mucus.viscosity, y = nosebleeds, data = data, color = arm) +
   geom_smooth(method = "lm") 
 
+## Study center effect: hospitalization
 
+qpois.model.spital <- glm(nosebleeds ~ 1 + previous.year + arm + country, offset = log(duration), 
+                          data=data, family = quasipoisson(link=log))
+summary(qpois.model.spital)
 
+anova(qpois.model.adj, qpois.model.spital, test = "Chisq")
+boxplot(nosebleeds ~country, data=data)
 
 
 
