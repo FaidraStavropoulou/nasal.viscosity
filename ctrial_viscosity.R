@@ -1,3 +1,6 @@
+### Libraries
+library(ggplot2)
+
 ### Load and merge data
 
 data_randomiz <- read.csv("./Scenario/data/randomization.csv", header =TRUE)
@@ -21,3 +24,21 @@ table(data$arm, data$eye.colour, useNA="ifany")
 
 # continuous variables
 apply(data[!(colnames(data) %in% c(cols_to_factor, "subject"))],2,summary)
+
+# plots per trial arm
+df <- data.frame(table(data$tissue.use,data$arm))
+names(df) <- c("tissue.use","arm","count")
+ggplot(data=df, aes(x= tissue.use, y=count, fill=arm)) + geom_bar(stat="identity", position = "dodge")
+
+df<-data.frame(table(data$previous.year,data$arm))
+names(df) <- c("previous.year","arm","count")
+ggplot(data=df, aes(x= previous.year, y=count, fill=arm)) + geom_bar(stat="identity", position = "dodge")
+
+df<-data.frame(table(data$nosebleeds,data$arm))
+names(df) <- c("nosebleeds","arm","count")
+ggplot(data=df, aes(x= nosebleeds, y=count, fill=arm)) + geom_bar(stat="identity", position = "dodge")
+
+ggplot(data=data, aes(x = arm, y = mucus.viscosity)) + geom_boxplot()
+
+
+### Primamry hypothesis: Treatment effect
