@@ -100,4 +100,39 @@ summary(qpois.model.tissue.arm)
 
 # test for interaction term
 anova(qpois.model.tissue.arm, qpois.model.tissue.arm.interact, test="Chisq")
-interaction.plot(data$tissue.use, data$arm, data$nosebleeds)
+ggplot(data= data, aes(x = arm, color = tissue.use, group = tissue.use, y = nosebleeds)) +
+  stat_summary(fun.y = mean, geom = "point") +
+  stat_summary(fun.y = mean, geom = "line")
+
+
+## Predictive biomarker: mucus viscosity
+
+# model with biomarker only
+qpois.model.viscosity.active <- glm(nosebleeds ~ 1 + previous.year + mucus.viscosity, 
+                                    offset = log(duration), 
+                                    data=data, subset = which(data$arm=="ACTIVE"),
+                                    family = quasipoisson(link=log))
+summary(qpois.model.viscosity.active)
+
+# main effects biomarker and treatment 
+qpois.model.viscosity.arm <- glm(nosebleeds ~ 1 + previous.year + mucus.viscosity + arm, 
+                                 offset = log(duration), 
+                                 data=data, 
+                                 family = quasipoisson(link=log))
+summary(qpois.model.viscosity.arm)
+
+# interaction biomarker::treatment
+qpois.model.viscosity.interact <- glm(nosebleeds ~ 1 + previous.year + mucus.viscosity*arm, 
+                                 offset = log(duration), 
+                                 data=data, 
+                                 family = quasipoisson(link=log))
+summary(qpois.model.viscosity.interact)
+
+qplot(x = mucus.viscosity, y = nosebleeds, data = data, color = arm) +
+  geom_smooth(method = "lm") 
+
+
+
+
+
+
