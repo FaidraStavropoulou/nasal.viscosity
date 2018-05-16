@@ -42,3 +42,15 @@ ggplot(data=data, aes(x = arm, y = mucus.viscosity)) + geom_boxplot()
 
 
 ### Primamry hypothesis: Treatment effect
+
+# poisson regression (unadjusted)
+pois.model.unadj <- glm(nosebleeds ~ 1 + arm, offset = log(duration), data=data, family = poisson(link=log))
+summary(pois.model.unadj)
+
+# poisson regression (adjusted at baseline)
+pois.model.adj <- glm(nosebleeds ~ 1 + previous.year + arm, offset = log(duration), data=data, family = poisson(link=log))
+summary(pois.model.adj)
+
+mean(data$nosebleeds)
+var(data$nosebleeds)
+
