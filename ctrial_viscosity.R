@@ -71,7 +71,33 @@ qpois.model.unadj <- glm(nosebleeds ~ 1 + arm, offset = log(duration), data=data
                          family = quasipoisson(link=log))
 summary(qpois.model.unadj) # dispersion parameter = 1.7 -> need to adjust se for dispersion
 
-#quasi-poisson regression (adjusted)
+# quasi-poisson regression (adjusted)
 qpois.model.adj <- glm(nosebleeds ~ 1 + previous.year + arm, offset = log(duration), data=data, 
                        family = quasipoisson(link=log))
 summary(qpois.model.adj)
+
+
+### Exploratory analysis
+
+## Subgroup analysis: effect modification tissue::treatment
+
+# tissue - arm interaction
+qpois.model.tissue.arm.interact <- glm(nosebleeds ~ 1 + previous.year + tissue.use*arm, 
+                                       offset = log(duration), 
+                                       data=data, 
+                                       family = quasipoisson(link=log))
+summary(qpois.model.tissue.arm.interact) # treatment lost significance
+
+# tissue
+qpois.model.tissue <- glm(nosebleeds ~ 1 + previous.year + tissue.use, offset = log(duration), 
+                          data=data, family = quasipoisson(link=log))
+summary(qpois.model.tissue)
+
+# tissue - arm main effects
+qpois.model.tissue.arm <- glm(nosebleeds ~ 1 + previous.year + tissue.use + arm, offset = log(duration), 
+                              data=data, family = quasipoisson(link=log))
+summary(qpois.model.tissue.arm)
+
+# test for interaction term
+anova(qpois.model.tissue.arm, qpois.model.tissue.arm.interact, test="Chisq")
+interaction.plot(data$tissue.use, data$arm, data$nosebleeds)
