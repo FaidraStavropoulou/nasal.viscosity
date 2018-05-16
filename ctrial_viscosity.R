@@ -140,7 +140,10 @@ qpois.model.spital <- glm(nosebleeds ~ 1 + previous.year + arm + country, offset
 summary(qpois.model.spital)
 
 anova(qpois.model.adj, qpois.model.spital, test = "Chisq")
-boxplot(nosebleeds ~country, data=data)
+boxplot(jitter(nosebleeds) ~ country, data=data)
+sd(aggregate(data$nosebleeds, by =list(data$country), mean)$x)
 
-glmer(nosebleeds ~ 1 + previous.year + arm + (1|country) + offset(duration), data=data, family=poisson(link=log))
+ggplot(data= data, aes(x = country, color = arm, group = arm, y = nosebleeds)) +
+       stat_summary(fun.y = mean, geom = "point") +
+       stat_summary(fun.y = mean, geom = "line")
 
