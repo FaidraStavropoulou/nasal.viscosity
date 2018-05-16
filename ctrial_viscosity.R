@@ -2,6 +2,7 @@
 library(ggplot2)
 library(sandwich)
 library(lmtest)
+library(lme4)
 
 
 ### Load and merge data
@@ -141,5 +142,5 @@ summary(qpois.model.spital)
 anova(qpois.model.adj, qpois.model.spital, test = "Chisq")
 boxplot(nosebleeds ~country, data=data)
 
-
+glmer(nosebleeds ~ 1 + previous.year + arm + (1|country) + offset(duration), data=data, family=poisson(link=log))
 
