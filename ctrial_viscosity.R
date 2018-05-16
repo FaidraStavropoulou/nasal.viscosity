@@ -1,5 +1,8 @@
 ### Libraries
 library(ggplot2)
+library(sandwich)
+library(lmtest)
+
 
 ### Load and merge data
 
@@ -53,11 +56,22 @@ p.test
 # poisson regression (unadjusted)
 pois.model.unadj <- glm(nosebleeds ~ 1 + arm, offset = log(duration), data=data, family = poisson(link=log))
 summary(pois.model.unadj)
+coeftest(pois.model.unadj, vcov = sandwich)
 
 # poisson regression (adjusted at baseline)
 pois.model.adj <- glm(nosebleeds ~ 1 + previous.year + arm, offset = log(duration), data=data, family = poisson(link=log))
 summary(pois.model.adj)
+coeftest(pois.model.adj, vcov = sandwich)
 
 mean(data$nosebleeds)
 var(data$nosebleeds)
 
+# quasi-poisson regression (unadjusted)
+qpois.model.unadj <- glm(nosebleeds ~ 1 + arm, offset = log(duration), data=data, 
+                         family = quasipoisson(link=log))
+summary(qpois.model.unadj) # dispersion parameter = 1.7 -> need to adjust se for dispersion
+
+#quasi-poisson regression (adjusted)
+qpois.model.adj <- glm(nosebleeds ~ 1 + previous.year + arm, offset = log(duration), data=data, 
+                       family = quasipoisson(link=log))
+summary(qpois.model.adj)
