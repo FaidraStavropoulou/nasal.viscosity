@@ -26,15 +26,15 @@ table(data$arm, data$eye.colour, useNA="ifany")
 apply(data[!(colnames(data) %in% c(cols_to_factor, "subject"))],2,summary)
 
 # plots per trial arm
-df <- data.frame(table(data$tissue.use,data$arm))
+df <- data.frame(prop.table(table(data$tissue.use,data$arm)))
 names(df) <- c("tissue.use","arm","count")
 ggplot(data=df, aes(x= tissue.use, y=count, fill=arm)) + geom_bar(stat="identity", position = "dodge")
 
-df<-data.frame(table(data$previous.year,data$arm))
+df<-data.frame(prop.table(table(data$previous.year,data$arm)))
 names(df) <- c("previous.year","arm","count")
 ggplot(data=df, aes(x= previous.year, y=count, fill=arm)) + geom_bar(stat="identity", position = "dodge")
 
-df<-data.frame(table(data$nosebleeds,data$arm))
+df<-data.frame(prop.table(table(data$nosebleeds,data$arm)))
 names(df) <- c("nosebleeds","arm","count")
 ggplot(data=df, aes(x= nosebleeds, y=count, fill=arm)) + geom_bar(stat="identity", position = "dodge")
 
