@@ -147,3 +147,14 @@ ggplot(data= data, aes(x = country, color = arm, group = arm, y = nosebleeds)) +
        stat_summary(fun.y = mean, geom = "point") +
        stat_summary(fun.y = mean, geom = "line")
 
+## What about the eye colour?
+qpois.model.eyecolour <- glm(nosebleeds ~ 1 + previous.year + arm + eye.colour, offset = log(duration), 
+                             data=data, family = quasipoisson(link=log))
+summary(qpois.model.eyecolour)
+
+ggplot(data= data, aes(x = eye.colour, color = arm, group = arm, y = nosebleeds)) +
+  stat_summary(fun.y = mean, geom = "point") +
+  stat_summary(fun.y = mean, geom = "line")
+
+
+
